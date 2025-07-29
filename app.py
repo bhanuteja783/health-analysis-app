@@ -2,7 +2,7 @@ import streamlit as st
 import pytesseract
 from PIL import Image
 import numpy as np
-from utils import detect_diseases
+from utils import extract_text_from_image, detect_diseases
 from languages import translate_text, LANGUAGES
 
 st.set_page_config(page_title="🩺 Health Report Analyzer")
