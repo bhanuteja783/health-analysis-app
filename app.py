@@ -9,6 +9,7 @@ st.set_page_config(page_title="🩺 Health Report Analyzer")
 st.title("🩻 Health Report Analyzer")
 st.markdown("Upload a medical report (JPG/PNG) and select language to get health analysis and suggestions.")
 
+# File upload
 uploaded_file = st.file_uploader("📎 Upload a health report image", type=["jpg", "jpeg", "png"])
 selected_language = st.selectbox("🌐 Choose your language", LANGUAGES)
 
@@ -19,7 +20,9 @@ if uploaded_file is not None and selected_language:
     st.image(image, caption="Uploaded Report", use_column_width=True)
 
     with st.spinner("🔍 Analyzing report..."):
-        extracted_text = extract_text_from_image(uploaded_file)
+        # ✅ FIX: Pass actual image object instead of path
+        extracted_text = extract_text_from_image(image)
+
         st.subheader("📄 Extracted Report Text:")
         st.code(extracted_text)
 
