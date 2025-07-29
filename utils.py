@@ -1,17 +1,16 @@
 import re
 import easyocr
-from PIL import Image
 import numpy as np
+from PIL import Image
 
 reader = easyocr.Reader(['en'], gpu=False)
 
-def extract_text_from_image(image_path):
+def extract_text_from_image(image):
     """
-    Extract and clean text from uploaded medical report image.
+    Extract and clean text from a PIL Image using EasyOCR.
     """
     try:
-        img = Image.open(image_path)
-        result = reader.readtext(np.array(img), detail=0)
+        result = reader.readtext(np.array(image), detail=0)
         raw_text = ' '.join(result)
         return clean_text(raw_text)
     except Exception as e:
@@ -22,5 +21,3 @@ def clean_text(text):
     cleaned = re.sub(r'\s+', ' ', cleaned)
     cleaned = re.sub(r'[^a-zA-Z0-9:.,()%+-/ ]', '', cleaned)
     return cleaned.strip()
-
-
