@@ -1,31 +1,16 @@
-from deep_translator import DeeplTranslator
+from deep_translator import GoogleTranslator
 
 LANGUAGES = [
-    "English", "Hindi", "Telugu", "Tamil", "Kannada", "Malayalam", "Urdu", 
-    "Spanish", "French", "German", "Chinese", "Arabic", "Bengali", "Japanese"
+    "en", "hi", "te", "ta", "kn", "mr", "bn", "gu", "ml",  # Indian
+    "es", "fr", "de", "zh", "ja", "ru", "ar", "pt"         # Global
 ]
 
-LANG_CODE_MAP = {
-    "English": "EN",
-    "Hindi": "HI",
-    "Telugu": "TE",
-    "Tamil": "TA",
-    "Kannada": "KN",
-    "Malayalam": "ML",
-    "Urdu": "UR",
-    "Spanish": "ES",
-    "French": "FR",
-    "German": "DE",
-    "Chinese": "ZH",
-    "Arabic": "AR",
-    "Bengali": "BN",
-    "Japanese": "JA"
-}
-
-def translate_text(text, language):
+def translate_text(text, target_lang):
     try:
-        target_lang = LANG_CODE_MAP.get(language, "EN")
-        return DeeplTranslator(source="EN", target=target_lang).translate(text)
+        if target_lang == "en":
+            return text
+        translated = GoogleTranslator(source='auto', target=target_lang).translate(text)
+        return translated
     except Exception as e:
-        return f"Translation error: {e}"
+        return f"(Translation error: {e})"
 
