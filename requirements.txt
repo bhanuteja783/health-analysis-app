@@ -1,6 +1,6 @@
 streamlit
-pytesseract
+easyocr
 Pillow
-deep_translator
+deep-translator
 numpy
 
