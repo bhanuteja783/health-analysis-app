@@ -1,6 +1,6 @@
 streamlit
 pytesseract
 Pillow
-deep-translator
+deep_translator
 numpy
-scikit-learn
+
