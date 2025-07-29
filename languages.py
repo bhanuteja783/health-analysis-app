@@ -1,28 +1,23 @@
-from googletrans import Translator
-
-translator = Translator()
+from deep_translator import GoogleTranslator
 
 LANGUAGES = {
-    "English": "en",
-    "Telugu": "te",
-    "Hindi": "hi",
-    "Tamil": "ta",
-    "Kannada": "kn",
-    "Malayalam": "ml",
-    "Urdu": "ur",
-    "Gujarati": "gu",
-    "Marathi": "mr",
-    "Bengali": "bn",
-    "Spanish": "es",
-    "French": "fr",
-    "Arabic": "ar",
-    "Chinese (Simplified)": "zh-cn",
-    "Russian": "ru"
+    "en": "english",
+    "te": "telugu",
+    "hi": "hindi",
+    "ta": "tamil",
+    "ml": "malayalam",
+    "kn": "kannada",
+    "ur": "urdu",
+    "es": "spanish",
+    "fr": "french",
+    "zh-CN": "chinese (simplified)",
+    "de": "german",
+    "ru": "russian",
+    "ja": "japanese"
 }
 
-def translate_text(text, target_lang_code):
+def translate_text(text, target_lang):
     try:
-        translated = translator.translate(text, dest=target_lang_code)
-        return translated.text
-    except:
-        return text
+        return GoogleTranslator(source='auto', target=target_lang).translate(text)
+    except Exception as e:
+        return f"Translation error: {e}"
