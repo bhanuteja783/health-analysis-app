@@ -1,8 +1,8 @@
 import streamlit as st
-import pytesseract
 from PIL import Image
 import numpy as np
-from utils import detect_diseases
+from utils import extract_text_from_image
+from logic import detect_diseases
 from languages import translate_text, LANGUAGES
 
 st.set_page_config(page_title="🩺 Health Report Analyzer")
@@ -19,18 +19,17 @@ if uploaded_file is not None and selected_language:
     st.image(image, caption="Uploaded Report", use_column_width=True)
 
     with st.spinner("🔍 Analyzing report..."):
-        extracted_text = pytesseract.image_to_string(img_array)
-
+        extracted_text = extract_text_from_image(uploaded_file)
         st.subheader("📄 Extracted Report Text:")
         st.code(extracted_text)
 
         diseases_found = detect_diseases(extracted_text)
 
         if not diseases_found:
-            st.warning("⚠️ No known health issues detected.")
+            st.warning("⚠ No known health issues detected.")
         else:
             st.subheader("✅ Detected Health Issues:")
             for disease, advice in diseases_found.items():
                 translated = translate_text(advice, selected_language)
-                st.markdown(f"**🩺 {disease.upper()}**")
+                st.markdown(f"🩺 {disease.upper()}")
                 st.write(translated)
