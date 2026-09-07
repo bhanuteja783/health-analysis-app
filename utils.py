@@ -1,27 +1,22 @@
 import re
-from functools import lru_cache
 
-import numpy as np
-
-
-@lru_cache(maxsize=1)
-def get_reader():
-    """Create the EasyOCR reader only when OCR is actually needed."""
-    import easyocr
-
-    return easyocr.Reader(["en"], gpu=False)
+import pytesseract
+from pytesseract import TesseractNotFoundError
 
 
 def extract_text_from_image(image):
-    """Extract and clean text from a PIL Image using EasyOCR."""
+    """Extract and clean English text from a PIL Image using Tesseract OCR."""
     try:
         if image is None:
             return ""
 
-        reader = get_reader()
-        result = reader.readtext(np.array(image), detail=0)
-        raw_text = " ".join(result)
+        raw_text = pytesseract.image_to_string(image, config="--psm 6")
         return clean_text(raw_text)
+    except TesseractNotFoundError:
+        return (
+            "Error extracting text: OCR engine is not installed on the server. "
+            "Please try again after the app finishes redeploying."
+        )
     except Exception as exc:
         return f"Error extracting text: {exc}"
 
