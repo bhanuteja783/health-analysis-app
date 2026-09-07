@@ -9,25 +9,36 @@ from utils import extract_text_from_image
 st.set_page_config(page_title="🩺 Health Report Analyzer")
 st.title("🩻 Health Report Analyzer")
 st.markdown(
-    "Upload a medical report (JPG/PNG) and select a language to extract text and "
+    "Upload a medical report image and select a language to extract text and "
     "highlight supported health-related terms. This tool is not a medical diagnosis."
 )
 
 uploaded_file = st.file_uploader(
     "📎 Upload a health report image",
-    type=["jpg", "jpeg", "png"],
+    type=["image/jpeg", "image/png", ".jpg", ".jpeg", ".png"],
+    max_upload_size=50,
+    key="health_report_uploader",
+    help="Upload a JPG or PNG report image (up to 50 MB).",
 )
 selected_language = st.selectbox("🌐 Choose your language", LANGUAGES)
 
 if uploaded_file is not None:
     try:
-        image = Image.open(uploaded_file).convert("RGB")
-    except (UnidentifiedImageError, OSError) as exc:
-        st.error(f"Unable to read the uploaded image: {exc}")
+        file_bytes = uploaded_file.getvalue()
+        if not file_bytes:
+            st.error("The selected file is empty. Please choose the report again.")
+        else:
+            image = Image.open(uploaded_file)
+            image.verify()
+            uploaded_file.seek(0)
+            image = Image.open(uploaded_file).convert("RGB")
+    except (UnidentifiedImageError, OSError, ValueError) as exc:
+        st.error(f"Unable to read this image. Please upload a valid JPG or PNG file. ({exc})")
     else:
+        st.success(f"Report uploaded: {uploaded_file.name} ({uploaded_file.size / 1024:.0f} KB)")
         st.image(image, caption="Uploaded Report", use_container_width=True)
 
-        with st.spinner("🔍 Analyzing report..."):
+        with st.spinner("🔍 Analyzing report... This may take a moment on the first upload."):
             extracted_text = extract_text_from_image(image)
 
         if extracted_text.startswith("Error extracting text:"):
