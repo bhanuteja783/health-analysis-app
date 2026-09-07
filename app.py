@@ -15,8 +15,7 @@ st.markdown(
 
 uploaded_file = st.file_uploader(
     "📎 Upload a health report image",
-    type=["image/jpeg", "image/png", ".jpg", ".jpeg", ".png"],
-    max_upload_size=50,
+    type=["jpg", "jpeg", "png"],
     key="health_report_uploader",
     help="Upload a JPG or PNG report image (up to 50 MB).",
 )
@@ -33,12 +32,20 @@ if uploaded_file is not None:
             uploaded_file.seek(0)
             image = Image.open(uploaded_file).convert("RGB")
     except (UnidentifiedImageError, OSError, ValueError) as exc:
-        st.error(f"Unable to read this image. Please upload a valid JPG or PNG file. ({exc})")
+        st.error(
+            "Unable to read this image. Please upload a valid JPG or PNG file. "
+            f"({exc})"
+        )
     else:
-        st.success(f"Report uploaded: {uploaded_file.name} ({uploaded_file.size / 1024:.0f} KB)")
+        st.success(
+            f"Report uploaded: {uploaded_file.name} "
+            f"({uploaded_file.size / 1024:.0f} KB)"
+        )
         st.image(image, caption="Uploaded Report", use_container_width=True)
 
-        with st.spinner("🔍 Analyzing report... This may take a moment on the first upload."):
+        with st.spinner(
+            "🔍 Analyzing report... This may take a moment on the first upload."
+        ):
             extracted_text = extract_text_from_image(image)
 
         if extracted_text.startswith("Error extracting text:"):
